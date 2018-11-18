@@ -1,5 +1,4 @@
-hyper-gcp-statusline
-====================
+# hyper-gcp-status-line [![npm](https://img.shields.io/npm/dt/hyper-gcp-status-line.svg?maxAge=86400?style=flat-square)](https://www.npmjs.com/package/hyper-gcp-status-line)
 
 A status line plugin for [Hyper.js](https://hyper.is/) that shows the currently active [Google Cloud Platform](https://cloud.google.com/) project and [Kubernetes](https://kubernetes.io) context.
 
