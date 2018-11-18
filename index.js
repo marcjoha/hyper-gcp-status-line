@@ -1,12 +1,6 @@
 const color = require('color');
 const { execFile } = require('child_process');
 
-/*
-todo:
-- screenshot
-- package for npm
-*/
-
 let configuration = {
     gcloudBinary: 'gcloud',
     kubectlBinary: 'kubectl'
