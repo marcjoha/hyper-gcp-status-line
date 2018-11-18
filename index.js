@@ -1,3 +1,4 @@
+const color = require('color');
 const { execFile } = require('child_process');
 
 /*
@@ -63,6 +64,13 @@ exports.reduceUI = (state, { type, config }) => {
 }
 
 exports.decorateConfig = (config) => {
+    const colorForeground = color(config.foregroundColor || '#fff');
+    const colorBackground = color(config.backgroundColor || '#000');
+    const colors = {
+        foreground: colorForeground.string(),
+        background: colorBackground.lighten(0.3).string()
+    };
+
     return Object.assign({}, config, {
         css: `
             ${config.css || ''}
@@ -79,8 +87,9 @@ exports.decorateConfig = (config) => {
                 z-index: 100;
                 font-size: 12px;
                 height: 30px;
-                padding: 4px 0 0 10px;
-                border-top: 1px solid white;
+                padding: 5px 0 0 10px;
+                color: ${colors.foreground};
+                background-color: ${colors.background};
             }
             .hyper-gcp-status-line .item {
                 padding: 2px 15px 0 25px;
