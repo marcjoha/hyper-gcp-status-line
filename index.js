@@ -123,9 +123,9 @@ exports.decorateHyper = (Hyper, { React }) => {
             return (
                 React.createElement(Hyper, Object.assign({}, this.props, {
                     customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'hyper-gcp-status-line' },
-                        React.createElement('div', { className: 'item gcp' }, this.state.gcp),
-                        React.createElement('div', { className: 'item gce' }, this.state.gce),
-                        React.createElement('div', { className: 'item kubernetes' }, this.state.kubernetes)
+                        React.createElement('div', { className: 'item gcp', title: 'GCP project' }, this.state.gcp),
+                        React.createElement('div', { className: 'item gce', title: 'Compute Engine default zone' }, this.state.gce),
+                        React.createElement('div', { className: 'item kubernetes', title: 'Kubernetes context and namespace' }, this.state.kubernetes)
                     ))
                 }))
             );
