@@ -2,10 +2,10 @@ const { execFile } = require('child_process');
 
 /*
 todo:
-- fixa css och ikoner
+- fix colors to work with other themes
+- make text clickable
 - screenshot
-- paketering
-- twittra
+- package for npm
 */
 
 let configuration = {
@@ -63,6 +63,39 @@ exports.reduceUI = (state, { type, config }) => {
     return state
 }
 
+exports.decorateConfig = (config) => {
+    return Object.assign({}, config, {
+        css: `
+            ${config.css || ''}
+            .terms_terms {
+                margin-bottom: 30px;
+            }
+            .hyper-gcp-status-line {
+                display: flex;
+                justify-content: flex-start;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                font-size: 12px;
+                height: 30px;
+                padding: 4px 0 0 10px;
+                border-top: 1px solid white;
+            }
+            .hyper-gcp-status-line .item {
+                padding: 2px 15px 0 25px;
+            }
+            .hyper-gcp-status-line .gcp {
+                background: url(${__dirname}/icons/gcp.svg) no-repeat;
+            }
+            .hyper-gcp-status-line .kubernetes {
+                background: url(${__dirname}/icons/kubernetes.svg) no-repeat;
+            }
+        `
+    })
+}
+
 exports.decorateHyper = (Hyper, { React }) => {
     return class extends React.PureComponent {
         constructor(props) {
@@ -76,7 +109,7 @@ exports.decorateHyper = (Hyper, { React }) => {
 
             return (
                 React.createElement(Hyper, Object.assign({}, this.props, {
-                    customInnerChildren: existingChildren.concat(React.createElement('div', { className: 'hyper-gcp-status-line' },
+                    customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'hyper-gcp-status-line' },
                         React.createElement('div', { className: 'item gcp' }, this.state.gcp),
                         React.createElement('div', { className: 'item kubernetes' }, this.state.kubernetes)
                     ))
