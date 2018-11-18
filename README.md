@@ -6,7 +6,7 @@ A status line plugin for [Hyper.js](https://hyper.is/) that shows the currently 
 
 Should work with most themes, and allow custom paths to `gcloud` and `kubectl` which are used to retrieve information.
 
-Credits go out to [Henrik Dahl](https://github.com/henrikdahl) and his work on [hyper-statusline](https://github.com/henrikdahl/hyper-statusline). Make sure to check out his work if you want a status line that shows Git information.
+Credits go out to [Henrik Dahl](https://github.com/henrikdahl) and his work on [hyper-statusline](https://github.com/henrikdahl/hyper-statusline). Check it out if you want a status line that shows Git information.
 
 ## Installation
 
