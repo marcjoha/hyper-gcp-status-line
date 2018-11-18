@@ -30,7 +30,7 @@ module.exports = {
     ...
       hyperGcpStatusLine: {
         gcloudBinary: '/my/path/gcloud',
-        kubectlBinary: '/my/path/gcloud'
+        kubectlBinary: '/my/path/kubectl'
 
       }
     ...
