@@ -3,7 +3,7 @@ hyper-gcp-statusline
 
 A status line plugin for Hyper.js that shows the currently active Google Cloud Platform project and Kubernetes context.
 
-![hyper-gcp-statusline](https://cloud.githubusercontent.com/assets/xyz "hyper-gcp-statusline")
+![hyper-gcp-statusline](https://user-images.githubusercontent.com/3009167/48673267-076fc580-eb40-11e8-95f7-cfa4b3b4d345.png "hyper-gcp-statusline")
 
 ## Install
 
