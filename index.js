@@ -31,9 +31,9 @@ function setStatusGce() {
 function setStatusKubernetes() {
     runCommand(configuration.kubectlBinary, ['config', 'current-context']).then(context => {
         runCommand(configuration.kubectlBinary, ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']).then(namespace => {
-            status.kubernetes = context + ":" + namespace;
+            status.kubernetes = context + " (" + namespace + ")";
         }).catch(() => {
-            status.kubernetes = context + ":default";
+            status.kubernetes = context + " (default)";
         })
     }).catch(() => {
         status.kubernetes = 'n/a';
