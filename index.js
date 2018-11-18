@@ -2,8 +2,9 @@ const { execFile } = require('child_process');
 
 /*
 todo:
-- få upp på github 
 - fixa css och ikoner
+- screenshot
+- paketering
 - twittra
 */
 
