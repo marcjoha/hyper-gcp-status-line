@@ -1,0 +1,29 @@
+{
+  "name": "hyper-gcp-status-line",
+  "version": "1.0.0",
+  "description": "A status line plugin for Hyper.js that shows the currently acxtive Google Cloud Platform project and Kubernetes context.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcjoha/hyper-gcp-status-line.git"
+  },
+  "keywords": [
+    "hyper",
+    "statusline",
+    "google",
+    "cloud",
+    "platform",
+    "gcp",
+    "kubernetes",
+    "k8s"
+  ],
+  "author": "Marcus Johansson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcjoha/hyper-gcp-status-line/issues"
+  },
+  "homepage": "https://github.com/marcjoha/hyper-gcp-status-line#readme"
+}
