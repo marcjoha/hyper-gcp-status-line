@@ -8,6 +8,7 @@ let configuration = {
 
 let status = {
     gcp: 'n/a',
+    gce: 'n/a',
     kubernetes: 'n/a'
 }
 
@@ -16,6 +17,14 @@ function setStatusGcp() {
         status.gcp = project;
     }).catch(() => {
         status.gcp = 'n/a';
+    })
+}
+
+function setStatusGce() {
+    runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
+        status.gce = zone;
+    }).catch(() => {
+        status.gce = 'n/a';
     })
 }
 
@@ -90,6 +99,9 @@ exports.decorateConfig = (config) => {
             .hyper-gcp-status-line .gcp {
                 background: url(${__dirname}/icons/gcp.svg) no-repeat;
             }
+            .hyper-gcp-status-line .gce {
+                background: url(${__dirname}/icons/gce.svg) no-repeat;
+            }
             .hyper-gcp-status-line .kubernetes {
                 background: url(${__dirname}/icons/kubernetes.svg) no-repeat;
             }
@@ -112,6 +124,7 @@ exports.decorateHyper = (Hyper, { React }) => {
                 React.createElement(Hyper, Object.assign({}, this.props, {
                     customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'hyper-gcp-status-line' },
                         React.createElement('div', { className: 'item gcp' }, this.state.gcp),
+                        React.createElement('div', { className: 'item gce' }, this.state.gce),
                         React.createElement('div', { className: 'item kubernetes' }, this.state.kubernetes)
                     ))
                 }))
@@ -136,12 +149,14 @@ exports.middleware = (store) => (next) => (action) => {
             const { data } = action;
             if (data.indexOf('\n') > 1) {
                 setStatusGcp();
+                setStatusGce();
                 setStatusKubernetes();
             }
             break;
 
         case 'SESSION_SET_ACTIVE':
             setStatusGcp();
+            setStatusGce();
             setStatusKubernetes();
             break;
     }
