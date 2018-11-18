@@ -25,7 +25,7 @@ module.exports = {
 
 Optionally configure the below settings in `~/.hyper.js`.
 
-### Path to `gcloud`and `kubectl`
+### Path to `gcloud` and `kubectl`
 Unless specified, `hyper-gcp-statusline` assumes binaries are installed on the global `PATH`.
 
 ```javascript
