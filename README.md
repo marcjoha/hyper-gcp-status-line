@@ -15,7 +15,7 @@ Add the following to your `~/.hyper.js` config:
 ```javascript
 module.exports = {
   ...
-  plugins: ['hyper-gcp-statusline']
+  plugins: ['hyper-gcp-status-line']
   ...
 }
 ```
@@ -25,7 +25,7 @@ module.exports = {
 Optionally configure the below settings in `~/.hyper.js`.
 
 ### Path to `gcloud` and `kubectl`
-Unless specified, `hyper-gcp-statusline` assumes binaries are installed on the global `PATH`.
+Unless specified, `hyper-gcp-status-line` assumes binaries are installed on the global `PATH`.
 
 ```javascript
 module.exports = {
