@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/marcjoha/hyper-gcp-status-line/issues"
   },
-  "homepage": "https://github.com/marcjoha/hyper-gcp-status-line#readme"
+  "homepage": "https://github.com/marcjoha/hyper-gcp-status-line#readme",
+  "dependencies": {
+    "color": "^3.1.0"
+  }
 }
