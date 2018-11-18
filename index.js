@@ -3,7 +3,6 @@ const { execFile } = require('child_process');
 
 /*
 todo:
-- fix colors to work with other themes
 - screenshot
 - package for npm
 */
