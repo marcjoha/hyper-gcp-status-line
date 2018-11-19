@@ -7,36 +7,36 @@ let configuration = {
 };
 
 let state = {
-    gcp: 'n/a',
-    gce: 'n/a',
-    kubernetes: 'n/a'
+    gcpProject: 'n/a',
+    gceDefaultZone: 'n/a',
+    kubernetesContext: 'n/a'
 }
 
 function setGcpProject() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'project']).then(project => {
-        state.gcp = project;
+        state.gcpProject = project;
     }).catch(() => {
-        state.gcp = 'n/a';
+        state.gcpProject = 'n/a';
     })
 }
 
 function setGceDefaultZone() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
-        state.gce = zone;
+        state.gceDefaultZone = zone;
     }).catch(() => {
-        state.gce = 'n/a';
+        state.gceDefaultZone = 'n/a';
     })
 }
 
 function setKubernetesContext() {
     runCommand(configuration.kubectlBinary, ['config', 'current-context']).then(context => {
         runCommand(configuration.kubectlBinary, ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']).then(namespace => {
-            state.kubernetes = context + " (" + namespace + ")";
+            state.kubernetesContext = context + " (" + namespace + ")";
         }).catch(() => {
-            state.kubernetes = context + " (default)";
+            state.kubernetesContext = context + " (default)";
         })
     }).catch(() => {
-        state.kubernetes = 'n/a';
+        state.kubernetesContext = 'n/a';
     })
 }
 
@@ -123,9 +123,9 @@ exports.decorateHyper = (Hyper, { React }) => {
             return (
                 React.createElement(Hyper, Object.assign({}, this.props, {
                     customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'hyper-gcp-status-line' },
-                        React.createElement('div', { className: 'item gcp', title: 'GCP project' }, this.state.gcp),
-                        React.createElement('div', { className: 'item gce', title: 'Compute Engine default zone' }, this.state.gce),
-                        React.createElement('div', { className: 'item kubernetes', title: 'Kubernetes context and namespace' }, this.state.kubernetes)
+                        React.createElement('div', { className: 'item gcp', title: 'GCP project' }, this.state.gcpProject),
+                        React.createElement('div', { className: 'item gce', title: 'Compute Engine default zone' }, this.state.gceDefaultZone),
+                        React.createElement('div', { className: 'item kubernetes', title: 'Kubernetes context and namespace' }, this.state.kubernetesContext)
                     ))
                 }))
             );
