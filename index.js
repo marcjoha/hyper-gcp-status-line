@@ -105,6 +105,7 @@ exports.decorateConfig = (config) => {
             }
             .hyper-gcp-status-line .item {
                 padding: 2px 15px 0 25px;
+                display: inline-table;
             }
             .hyper-gcp-status-line .item:last-child {
                 margin-left: auto;
