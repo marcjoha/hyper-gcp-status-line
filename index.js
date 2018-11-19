@@ -187,7 +187,6 @@ exports.middleware = (store) => (next) => (action) => {
         setGcpProject();
         setGceDefaultZone();
         setKubernetesContext();
-
     }
 
     next(action);
