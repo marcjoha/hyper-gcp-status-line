@@ -2,7 +2,7 @@
 
 A status line plugin for [Hyper](https://hyper.is/) that shows the currently configured [Google Cloud Platform](https://cloud.google.com/) project, the [Compute Engine](https://cloud.google.com/compute/) default zone, and the [Kubernetes](https://kubernetes.io) context and namespace. It will also show the current general GCP status information as fetched from https://status.cloud.google.com/.
 
-![hyper-gcp-statusline](https://user-images.githubusercontent.com/3009167/48677223-92b57f00-eb71-11e8-841d-d181b15c6df4.png "hyper-gcp-statusline")
+![hyper-gcp-statusline](https://user-images.githubusercontent.com/3009167/48724320-331aaa80-ec29-11e8-8a86-0b16c7d05374.png "hyper-gcp-statusline")
 
 Should work with most themes, and allow custom paths to `gcloud` and `kubectl` which are used to retrieve information.
 
