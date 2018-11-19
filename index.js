@@ -1,15 +1,19 @@
 const color = require('color');
 const { execFile } = require('child_process');
+const rp = require('request-promise');
+const cheerio = require('cheerio');
 
 let configuration = {
     gcloudBinary: 'gcloud',
-    kubectlBinary: 'kubectl'
+    kubectlBinary: 'kubectl',
+    timeBetweenGcpStatusChecks: 600000
 };
 
 let state = {
     gcpProject: 'n/a',
     gceDefaultZone: 'n/a',
-    kubernetesContext: 'n/a'
+    kubernetesContext: 'n/a',
+    gcpStatus: 'n/a'
 }
 
 function setGcpProject() {
@@ -37,6 +41,16 @@ function setKubernetesContext() {
         })
     }).catch(() => {
         state.kubernetesContext = 'n/a';
+    })
+}
+
+function setGcpStatus() {
+    rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
+        console.log('hejsan');
+        state.gcpStatus = $('.status').text().trim();
+    }) .catch(function (error) {
+        console.log(error);
+        state.gcpStatus = 'n/a';
     })
 }
 
@@ -96,14 +110,20 @@ exports.decorateConfig = (config) => {
             .hyper-gcp-status-line .item {
                 padding: 2px 15px 0 25px;
             }
-            .hyper-gcp-status-line .gcp {
+            .hyper-gcp-status-line .item:last-child {
+                margin-left: auto;
+            }
+            .hyper-gcp-status-line .gcp-project {
                 background: url(${__dirname}/icons/gcp.svg) no-repeat;
             }
-            .hyper-gcp-status-line .gce {
+            .hyper-gcp-status-line .gce-default-zone {
                 background: url(${__dirname}/icons/gce.svg) no-repeat;
             }
-            .hyper-gcp-status-line .kubernetes {
+            .hyper-gcp-status-line .kubernetes-context {
                 background: url(${__dirname}/icons/kubernetes.svg) no-repeat;
+            }
+            .hyper-gcp-status-line .gcp-status {
+                background: url(${__dirname}/icons/status.svg) no-repeat;
             }
         `
     })
@@ -123,22 +143,31 @@ exports.decorateHyper = (Hyper, { React }) => {
             return (
                 React.createElement(Hyper, Object.assign({}, this.props, {
                     customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'hyper-gcp-status-line' },
-                        React.createElement('div', { className: 'item gcp', title: 'GCP project' }, this.state.gcpProject),
-                        React.createElement('div', { className: 'item gce', title: 'Compute Engine default zone' }, this.state.gceDefaultZone),
-                        React.createElement('div', { className: 'item kubernetes', title: 'Kubernetes context and namespace' }, this.state.kubernetesContext)
+                        React.createElement('div', { className: 'item gcp-project', title: 'GCP project' }, this.state.gcpProject),
+                        React.createElement('div', { className: 'item gce-default-zone', title: 'Compute Engine default zone' }, this.state.gceDefaultZone),
+                        React.createElement('div', { className: 'item kubernetes-context', title: 'Kubernetes context and namespace' }, this.state.kubernetesContext),
+                        React.createElement('div', { className: 'item gcp-status', title: 'Status information as seen on https://status.cloud.google.com/' }, this.state.gcpStatus)
                     ))
                 }))
             );
         }
 
         componentDidMount() {
-            this.interval = setInterval(() => {
+            // Monitoring global state variable to draw updates
+            this.repaintInterval = setInterval(() => {
                 this.setState(state);
             }, 100);
+
+            // Check GCP status, and kick off timer to do it again in the future
+            setGcpStatus();
+            this.pollGcpStatusInterval = setInterval(() => {
+                setGcpStatus();
+            }, configuration.timeBetweenGcpStatusChecks);
         }
 
         componentWillUnmount() {
-            clearInterval(this.interval);
+            clearInterval(this.repaintInterval);
+            clearInterval(this.pollGcpStatusInterval);
         }
     };
 }

@@ -27,6 +27,9 @@
   },
   "homepage": "https://github.com/marcjoha/hyper-gcp-status-line#readme",
   "dependencies": {
-    "color": "^3.1.0"
+    "cheerio": "^1.0.0-rc.2",
+    "color": "^3.1.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
   }
 }

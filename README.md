@@ -1,6 +1,6 @@
 # hyper-gcp-status-line [![npm](https://img.shields.io/npm/v/hyper-gcp-status-line.svg?maxAge=86400?style=flat-square)](https://www.npmjs.com/package/hyper-gcp-status-line) [![npm](https://img.shields.io/npm/dt/hyper-gcp-status-line.svg?maxAge=86400?style=flat-square)](https://www.npmjs.com/package/hyper-gcp-status-line)
 
-A status line plugin for [Hyper](https://hyper.is/) that shows the currently active [Google Cloud Platform](https://cloud.google.com/) project, the [Compute Engine](https://cloud.google.com/compute/) default zone, and the [Kubernetes](https://kubernetes.io) context and namespace.
+A status line plugin for [Hyper](https://hyper.is/) that shows the currently configured [Google Cloud Platform](https://cloud.google.com/) project, the [Compute Engine](https://cloud.google.com/compute/) default zone, and the [Kubernetes](https://kubernetes.io) context and namespace. It will also show the current general GCP status information as fetched from https://status.cloud.google.com/.
 
 ![hyper-gcp-statusline](https://user-images.githubusercontent.com/3009167/48677223-92b57f00-eb71-11e8-841d-d181b15c6df4.png "hyper-gcp-statusline")
 
@@ -34,6 +34,22 @@ module.exports = {
       hyperGcpStatusLine: {
         gcloudBinary: '/my/path/gcloud',
         kubectlBinary: '/my/path/kubectl'
+
+      }
+    ...
+  }
+}
+```
+
+### GCP status information refresh interval `gcloud` and `kubectl`
+Unless specified, `hyper-gcp-status-line` will retrieve GCP status information from https://status.cloud.google.com/ every 10 minutes (600000 ms). Decrease at your own risk.
+
+```javascript
+module.exports = {
+  config: {
+    ...
+      hyperGcpStatusLine: {
+        timeBetweenGcpStatusChecks: 600000,
 
       }
     ...
