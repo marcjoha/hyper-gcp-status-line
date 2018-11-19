@@ -50,8 +50,7 @@ module.exports = {
   config: {
     ...
     hyperGcpStatusLine: {
-      timeBetweenGcpStatusChecks: 600000,
-
+      timeBetweenGcpStatusChecks: 600000
     }
     ...
   }
