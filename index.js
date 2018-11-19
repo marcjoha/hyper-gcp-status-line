@@ -78,11 +78,9 @@ exports.reduceUI = (state, { type, config }) => {
 }
 
 exports.decorateConfig = (config) => {
-    const colorForeground = color(config.foregroundColor || '#fff');
-    const colorBackground = color(config.backgroundColor || '#000');
     const colors = {
-        foreground: colorForeground.string(),
-        background: colorBackground.lighten(0.3).string()
+        foreground: config.foregroundColor || '#fff',
+        background: color(config.backgroundColor || '#000').lighten(0.3).string()
     };
 
     return Object.assign({}, config, {
