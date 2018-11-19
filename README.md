@@ -4,7 +4,7 @@ A status line plugin for [Hyper](https://hyper.is/) that shows the currently con
 
 *N.B. in order to see the GCP status information you'll have to clone and add the plugin locally, I won't publish a new version until I know how the status page behaves during an outage.*
 
-![hyper-gcp-statusline](https://user-images.githubusercontent.com/3009167/48724320-331aaa80-ec29-11e8-8a86-0b16c7d05374.png "hyper-gcp-statusline")
+![hyper-gcp-statusline](https://user-images.githubusercontent.com/3009167/48733239-500fa780-ec42-11e8-92d7-cc2e8f8279a8.png "hyper-gcp-statusline")
 
 Should work with most themes, and allow custom paths to `gcloud` and `kubectl` which are used to retrieve information.
 
