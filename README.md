@@ -33,27 +33,26 @@ Unless specified, `hyper-gcp-status-line` assumes binaries are installed on the 
 module.exports = {
   config: {
     ...
-      hyperGcpStatusLine: {
-        gcloudBinary: '/my/path/gcloud',
-        kubectlBinary: '/my/path/kubectl'
-
-      }
+    hyperGcpStatusLine: {
+      gcloudBinary: '/my/path/gcloud',
+      kubectlBinary: '/my/path/kubectl'
+    }
     ...
   }
 }
 ```
 
-### GCP status information refresh interval `gcloud` and `kubectl`
+### Time between GCP status checks
 Unless specified, `hyper-gcp-status-line` will retrieve GCP status information from https://status.cloud.google.com/ every 10 minutes (600000 ms). Decrease at your own risk.
 
 ```javascript
 module.exports = {
   config: {
     ...
-      hyperGcpStatusLine: {
-        timeBetweenGcpStatusChecks: 600000,
+    hyperGcpStatusLine: {
+      timeBetweenGcpStatusChecks: 600000,
 
-      }
+    }
     ...
   }
 }
