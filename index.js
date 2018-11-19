@@ -3,13 +3,13 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const color = require('color');
 
-let configuration = {
+const configuration = {
     gcloudBinary: 'gcloud',
     kubectlBinary: 'kubectl',
     timeBetweenGcpStatusChecks: 600000
 };
 
-let state = {
+const state = {
     gcpProject: 'n/a',
     gceDefaultZone: 'n/a',
     kubernetesContext: 'n/a',
@@ -70,7 +70,7 @@ exports.reduceUI = (state, { type, config }) => {
     switch (type) {
         case 'CONFIG_LOAD':
         case 'CONFIG_RELOAD': {
-            configuration = Object.assign(configuration, config.hyperGcpStatusLine);
+            Object.assign(configuration, config.hyperGcpStatusLine);
         }
     }
 
