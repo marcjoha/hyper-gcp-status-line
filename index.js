@@ -12,7 +12,7 @@ let state = {
     kubernetes: 'n/a'
 }
 
-function setStatusGcp() {
+function setGcpProject() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'project']).then(project => {
         state.gcp = project;
     }).catch(() => {
@@ -20,7 +20,7 @@ function setStatusGcp() {
     })
 }
 
-function setStatusGce() {
+function setGceDefaultZone() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
         state.gce = zone;
     }).catch(() => {
@@ -28,7 +28,7 @@ function setStatusGce() {
     })
 }
 
-function setStatusKubernetes() {
+function setKubernetesContext() {
     runCommand(configuration.kubectlBinary, ['config', 'current-context']).then(context => {
         runCommand(configuration.kubectlBinary, ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']).then(namespace => {
             state.kubernetes = context + " (" + namespace + ")";
@@ -148,16 +148,16 @@ exports.middleware = (store) => (next) => (action) => {
         case 'SESSION_ADD_DATA':
             const { data } = action;
             if (data.indexOf('\n') > 1) {
-                setStatusGcp();
-                setStatusGce();
-                setStatusKubernetes();
+                setGcpProject();
+                setGceDefaultZone();
+                setKubernetesContext();
             }
             break;
 
         case 'SESSION_SET_ACTIVE':
-            setStatusGcp();
-            setStatusGce();
-            setStatusKubernetes();
+            setGcpProject();
+            setGceDefaultZone();
+            setKubernetesContext();
             break;
     }
 
