@@ -35,9 +35,9 @@ function setGceDefaultZone() {
 function setKubernetesContext() {
     runCommand(configuration.kubectlBinary, ['config', 'current-context']).then(context => {
         runCommand(configuration.kubectlBinary, ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']).then(namespace => {
-            state.kubernetesContext = context + " (" + namespace + ")";
+            state.kubernetesContext = context + ' (' + namespace + ')';
         }).catch(() => {
-            state.kubernetesContext = context + " (default)";
+            state.kubernetesContext = context + ' (default)';
         })
     }).catch(() => {
         state.kubernetesContext = 'n/a';
@@ -58,8 +58,8 @@ function runCommand(command, options) {
             if (error) {
                 reject(`${error}\n${stderr}`);
             }
-            if (stdout.trim() == "") {
-                reject("stdout was empty");
+            if (stdout.trim() == '') {
+                reject('stdout was empty');
             }
             resolve(stdout.trim());
         })
