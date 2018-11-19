@@ -6,7 +6,7 @@ let configuration = {
     kubectlBinary: 'kubectl'
 };
 
-let status = {
+let state = {
     gcp: 'n/a',
     gce: 'n/a',
     kubernetes: 'n/a'
@@ -14,29 +14,29 @@ let status = {
 
 function setStatusGcp() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'project']).then(project => {
-        status.gcp = project;
+        state.gcp = project;
     }).catch(() => {
-        status.gcp = 'n/a';
+        state.gcp = 'n/a';
     })
 }
 
 function setStatusGce() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
-        status.gce = zone;
+        state.gce = zone;
     }).catch(() => {
-        status.gce = 'n/a';
+        state.gce = 'n/a';
     })
 }
 
 function setStatusKubernetes() {
     runCommand(configuration.kubectlBinary, ['config', 'current-context']).then(context => {
         runCommand(configuration.kubectlBinary, ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']).then(namespace => {
-            status.kubernetes = context + " (" + namespace + ")";
+            state.kubernetes = context + " (" + namespace + ")";
         }).catch(() => {
-            status.kubernetes = context + " (default)";
+            state.kubernetes = context + " (default)";
         })
     }).catch(() => {
-        status.kubernetes = 'n/a';
+        state.kubernetes = 'n/a';
     })
 }
 
@@ -133,7 +133,7 @@ exports.decorateHyper = (Hyper, { React }) => {
 
         componentDidMount() {
             this.interval = setInterval(() => {
-                this.setState(status);
+                this.setState(state);
             }, 100);
         }
 
