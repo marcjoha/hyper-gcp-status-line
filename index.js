@@ -171,21 +171,25 @@ exports.decorateHyper = (Hyper, { React }) => {
 }
 
 exports.middleware = (store) => (next) => (action) => {
+    let update = false;
+
     switch (action.type) {
         case 'SESSION_ADD_DATA':
-            const { data } = action;
-            if (data.indexOf('\n') > 1) {
-                setGcpProject();
-                setGceDefaultZone();
-                setKubernetesContext();
+            if (action.data.indexOf('\n') > 1) {
+                update = true;
             }
             break;
 
         case 'SESSION_SET_ACTIVE':
-            setGcpProject();
-            setGceDefaultZone();
-            setKubernetesContext();
+            update = true;
             break;
+    }
+
+    if(update) {
+        setGcpProject();
+        setGceDefaultZone();
+        setKubernetesContext();
+
     }
 
     next(action);
