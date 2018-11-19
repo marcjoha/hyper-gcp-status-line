@@ -1,7 +1,7 @@
-const color = require('color');
 const { execFile } = require('child_process');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+const color = require('color');
 
 let configuration = {
     gcloudBinary: 'gcloud',
@@ -46,10 +46,8 @@ function setKubernetesContext() {
 
 function setGcpStatus() {
     rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
-        console.log('hejsan');
         state.gcpStatus = $('.status').text().trim();
     }) .catch(function (error) {
-        console.log(error);
         state.gcpStatus = 'n/a';
     })
 }
@@ -58,12 +56,12 @@ function runCommand(command, options) {
     return new Promise((resolve, reject) => {
         execFile(command, options, (error, stdout, stderr) => {
             if (error) {
-                reject(`${error}\n${stderr}`)
+                reject(`${error}\n${stderr}`);
             }
             if (stdout.trim() == "") {
                 reject("stdout was empty");
             }
-            resolve(stdout.trim())
+            resolve(stdout.trim());
         })
     })
 }
@@ -76,7 +74,7 @@ exports.reduceUI = (state, { type, config }) => {
         }
     }
 
-    return state
+    return state;
 }
 
 exports.decorateConfig = (config) => {
@@ -137,7 +135,7 @@ exports.decorateHyper = (Hyper, { React }) => {
         }
 
         render() {
-            const { customChildren } = this.props
+            const { customChildren } = this.props;
             const existingChildren = customChildren ? customChildren instanceof Array ? customChildren : [customChildren] : [];
 
             return (
