@@ -16,10 +16,13 @@ const state = {
     gcpStatus: 'n/a'
 }
 
+const notifications = [];
+
 function setGcpProject() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'project']).then(project => {
         state.gcpProject = project;
-    }).catch(() => {
+    }).catch(error => {
+        notifications.push(error);
         state.gcpProject = 'n/a';
     })
 }
@@ -27,7 +30,8 @@ function setGcpProject() {
 function setGceDefaultZone() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
         state.gceDefaultZone = zone;
-    }).catch(() => {
+    }).catch(error => {
+        notifications.push(error);
         state.gceDefaultZone = 'n/a';
     })
 }
@@ -39,7 +43,8 @@ function setKubernetesContext() {
         }).catch(() => {
             state.kubernetesContext = context + ' (default)';
         })
-    }).catch(() => {
+    }).catch(error => {
+        notifications.push(error);
         state.kubernetesContext = 'n/a';
     })
 }
@@ -48,6 +53,7 @@ function setGcpStatus() {
     rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
         state.gcpStatus = $('.status').text().trim();
     }) .catch(function (error) {
+        notifications.push(error);
         state.gcpStatus = 'n/a';
     })
 }
@@ -56,7 +62,7 @@ function runCommand(command, options) {
     return new Promise((resolve, reject) => {
         execFile(command, options, (error, stdout, stderr) => {
             if (error) {
-                reject(`${error}\n${stderr}`);
+                reject(error);
             }
             if (stdout.trim() == '') {
                 reject('stdout was empty');
@@ -125,7 +131,7 @@ exports.decorateConfig = (config) => {
     })
 }
 
-exports.decorateHyper = (Hyper, { React }) => {
+exports.decorateHyper = (Hyper, { React, notify }) => {
     return class extends React.PureComponent {
         constructor(props) {
             super(props);
@@ -159,11 +165,19 @@ exports.decorateHyper = (Hyper, { React }) => {
             this.pollGcpStatusInterval = setInterval(() => {
                 setGcpStatus();
             }, configuration.timeBetweenGcpStatusChecks);
+
+            // Monitor queue for errors and warnings
+            this.notifyInterval = setInterval(() => {
+                if(notifications.length > 0) {
+                    notify('hyper-gcp-status-plugin error', notifications.pop());
+                }
+            }, 100);
         }
 
         componentWillUnmount() {
             clearInterval(this.repaintInterval);
             clearInterval(this.pollGcpStatusInterval);
+            clearInterval(this.notifyInterval);
         }
     };
 }
