@@ -1,7 +1,7 @@
 {
   "name": "hyper-gcp-status-line",
-  "version": "1.0.3",
-  "description": "A status line plugin for Hyper.js that shows the currently active Google Cloud Platform project and Kubernetes context.",
+  "version": "1.0.4",
+  "description": "A status line plugin for the Hyper terminal that shows information about the currently active GCP project and Kubernetes context.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
