@@ -155,7 +155,10 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
         }
 
         componentDidMount() {
-            // Monitoring global state variable to draw updates
+            // Check configuration, and kick off timer to watch for updates
+            setGcpProject();
+            setGceDefaultZone();
+            setKubernetesContext();
             this.repaintInterval = setInterval(() => {
                 this.setState(state);
             }, 100);
