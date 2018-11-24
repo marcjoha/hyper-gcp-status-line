@@ -162,7 +162,7 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
 
         componentDidMount() {
             // Check configuration, and kick off timer to watch for updates
-            setConfiguration()
+            setConfiguration();
             this.repaintInterval = setInterval(() => {
                 this.setState(state);
             }, 100);
@@ -190,22 +190,16 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
 }
 
 exports.middleware = (store) => (next) => (action) => {
-    let update = false;
-
     switch (action.type) {
         case 'SESSION_ADD_DATA':
             if (action.data.indexOf('\n') > 1) {
-                update = true;
+                setConfiguration();
             }
             break;
 
         case 'SESSION_SET_ACTIVE':
-            update = true;
+            setConfiguration();
             break;
-    }
-
-    if(update) {
-        setConfiguration();
     }
 
     next(action);
