@@ -49,6 +49,12 @@ function setKubernetesContext() {
     })
 }
 
+function setConfiguration() {
+    setGcpProject();
+    setGceDefaultZone();
+    setKubernetesContext();
+}
+
 function setGcpStatus() {
     rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
         state.gcpStatus = $('.status').text().trim();
@@ -156,9 +162,7 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
 
         componentDidMount() {
             // Check configuration, and kick off timer to watch for updates
-            setGcpProject();
-            setGceDefaultZone();
-            setKubernetesContext();
+            setConfiguration()
             this.repaintInterval = setInterval(() => {
                 this.setState(state);
             }, 100);
@@ -201,9 +205,7 @@ exports.middleware = (store) => (next) => (action) => {
     }
 
     if(update) {
-        setGcpProject();
-        setGceDefaultZone();
-        setKubernetesContext();
+        setConfiguration();
     }
 
     next(action);
