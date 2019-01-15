@@ -120,8 +120,12 @@ exports.decorateConfig = (config) => {
                 background-color: ${colors.background};
             }
             .hyper-gcp-status-line .item {
-                padding: 2px 15px 0 25px;
+                padding: 2px 5px 0 25px;
                 cursor: default;
+                overflow: hidden;
+                min-width: 0;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .hyper-gcp-status-line .item:last-child {
                 margin-left: auto;
