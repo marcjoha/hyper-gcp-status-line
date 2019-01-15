@@ -1,6 +1,6 @@
 {
   "name": "hyper-gcp-status-line",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A status line plugin for the Hyper terminal that shows information about the currently active GCP project and Kubernetes context.",
   "main": "index.js",
   "scripts": {

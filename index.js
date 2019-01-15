@@ -1,5 +1,6 @@
 const { execFile } = require('child_process');
 const rp = require('request-promise');
+const RequestError = require('request-promise/errors').RequestError;
 const cheerio = require('cheerio');
 const color = require('color');
 
@@ -58,7 +59,10 @@ function setConfiguration() {
 function setGcpStatus() {
     rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
         state.gcpStatus = $('.status').text().trim();
-    }) .catch(function (error) {
+    }).catch(RequestError, function(error) {
+        // RequestError is most likely due to user having no connectivity, so do nothing
+        state.gcpStatus = 'n/a';
+    }).catch(function (error) {
         notifications.push(error);
         state.gcpStatus = 'n/a';
     })
