@@ -1,6 +1,5 @@
 const { execFile } = require('child_process');
 const rp = require('request-promise');
-const RequestError = require('request-promise/errors').RequestError;
 const cheerio = require('cheerio');
 const color = require('color');
 
@@ -17,13 +16,11 @@ const state = {
     gcpStatus: 'n/a'
 }
 
-const notifications = [];
-
 function setGcpProject() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'project']).then(project => {
         state.gcpProject = project;
     }).catch(error => {
-        notifications.push(error);
+        console.log(error.message);
         state.gcpProject = 'n/a';
     })
 }
@@ -32,7 +29,7 @@ function setGceDefaultZone() {
     runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
         state.gceDefaultZone = zone;
     }).catch(error => {
-        notifications.push(error);
+        console.log(error.message);
         state.gceDefaultZone = 'n/a';
     })
 }
@@ -45,7 +42,7 @@ function setKubernetesContext() {
             state.kubernetesContext = context + ' (default)';
         })
     }).catch(error => {
-        notifications.push(error);
+        console.log(error.message);
         state.kubernetesContext = 'n/a';
     })
 }
@@ -59,11 +56,8 @@ function setConfiguration() {
 function setGcpStatus() {
     rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
         state.gcpStatus = $('.status').text().trim();
-    }).catch(RequestError, function(error) {
-        // RequestError is most likely due to user having no connectivity, so do nothing
-        state.gcpStatus = 'n/a';
     }).catch(function (error) {
-        notifications.push(error);
+        console.log(error.message);
         state.gcpStatus = 'n/a';
     })
 }
@@ -181,19 +175,11 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
             this.pollGcpStatusInterval = setInterval(() => {
                 setGcpStatus();
             }, configuration.timeBetweenGcpStatusChecks);
-
-            // Monitor queue for errors and warnings
-            this.notifyInterval = setInterval(() => {
-                if(notifications.length > 0) {
-                    notify('hyper-gcp-status-plugin error', notifications.pop());
-                }
-            }, 100);
         }
 
         componentWillUnmount() {
             clearInterval(this.repaintInterval);
             clearInterval(this.pollGcpStatusInterval);
-            clearInterval(this.notifyInterval);
         }
     };
 }
