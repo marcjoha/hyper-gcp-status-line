@@ -1,3 +1,4 @@
+const { shell } = require('electron');
 const { execFile } = require('child_process');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
@@ -6,6 +7,7 @@ const color = require('color');
 const configuration = {
     gcloudBinary: 'gcloud',
     kubectlBinary: 'kubectl',
+    gcpStatusUrl: 'https://status.cloud.google.com',
     timeBetweenGcpStatusChecks: 600000
 };
 
@@ -54,7 +56,7 @@ function setConfiguration() {
 }
 
 function setGcpStatus() {
-    rp({ uri: 'https://status.cloud.google.com/', transform: function (body) { return cheerio.load(body); }}).then(function ($) {
+    rp({ uri: configuration.gcpStatusUrl, transform: function (body) { return cheerio.load(body); }}).then(function ($) {
         state.gcpStatus = $('.status').text().trim();
     }).catch(function (error) {
         console.log(error.message);
@@ -135,6 +137,7 @@ exports.decorateConfig = (config) => {
             }
             .hyper-gcp-status-line .gcp-status {
                 background: url(${__dirname}/icons/status.svg) no-repeat;
+                cursor: pointer;
             }
         `
     })
@@ -145,6 +148,11 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
         constructor(props) {
             super(props);
             this.state = {};
+            this.handleClick = this.handleClick.bind(this);
+        }
+
+        handleClick(event) {
+            shell.openExternal(configuration.gcpStatusUrl);
         }
 
         render() {
@@ -157,7 +165,7 @@ exports.decorateHyper = (Hyper, { React, notify }) => {
                         React.createElement('div', { className: 'item gcp-project', title: 'GCP project' }, this.state.gcpProject),
                         React.createElement('div', { className: 'item gce-default-zone', title: 'Compute Engine default zone' }, this.state.gceDefaultZone),
                         React.createElement('div', { className: 'item kubernetes-context', title: 'Kubernetes context and namespace' }, this.state.kubernetesContext),
-                        React.createElement('div', { className: 'item gcp-status', title: 'Status information as seen on https://status.cloud.google.com/' }, this.state.gcpStatus)
+                        React.createElement('div', { className: 'item gcp-status', title: 'Status information as seen on ' + configuration.gcpStatusUrl, onClick: this.handleClick }, this.state.gcpStatus)
                     ))
                 }))
             );
