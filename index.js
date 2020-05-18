@@ -3,9 +3,10 @@ const { execFile } = require('child_process');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const color = require('color');
+const path = require('path');
 
 const configuration = {
-    gcloudBinary: 'gcloud',
+    gcloudBinary: (process.platform === 'win32') ? 'gcloud.cmd' : 'gcloud',
     kubectlBinary: 'kubectl',
     gcpStatusUrl: 'https://status.cloud.google.com',
     timeBetweenGcpStatusChecks: 600000
@@ -95,6 +96,8 @@ exports.decorateConfig = (config) => {
         background: color(config.backgroundColor || '#000').lighten(0.3).string()
     };
 
+    let pluginBasedir = (process.platform === 'win32') ? path.join(__dirname).replace(/\\/g, '/') : __dirname
+
     return Object.assign({}, config, {
         css: `
             ${config.css || ''}
@@ -127,16 +130,16 @@ exports.decorateConfig = (config) => {
                 margin-left: auto;
             }
             .hyper-gcp-status-line .gcp-project {
-                background: url(${__dirname}/icons/gcp.svg) no-repeat;
+                background: url(${pluginBasedir}/icons/gcp.svg) no-repeat;
             }
             .hyper-gcp-status-line .gce-default-zone {
-                background: url(${__dirname}/icons/gce.svg) no-repeat;
+                background: url(${pluginBasedir}/icons/gce.svg) no-repeat;
             }
             .hyper-gcp-status-line .kubernetes-context {
-                background: url(${__dirname}/icons/kubernetes.svg) no-repeat;
+                background: url(${pluginBasedir}/icons/kubernetes.svg) no-repeat;
             }
             .hyper-gcp-status-line .gcp-status {
-                background: url(${__dirname}/icons/status.svg) no-repeat;
+                background: url(${pluginBasedir}/icons/status.svg) no-repeat;
                 cursor: pointer;
             }
         `
