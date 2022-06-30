@@ -6,7 +6,9 @@ const color = require('color');
 const path = require('path');
 
 const configuration = {
-    gcloudBinary: (process.platform === 'win32') ? 'gcloud.cmd' : 'gcloud',
+    enableWSL: false,
+    wslBinary: 'wsl',
+    gcloudBinary: '',
     kubectlBinary: 'kubectl',
     gcpStatusUrl: 'https://status.cloud.google.com',
     timeBetweenGcpStatusChecks: 600000
@@ -20,7 +22,15 @@ const state = {
 }
 
 function setGcpProject() {
-    runCommand(configuration.gcloudBinary, ['config', 'get-value', 'project']).then(project => {
+    let args = ['config', 'get-value', 'project']
+    let cmd;
+    if (configuration.enableWSL) {
+        cmd = configuration.wslBinary;
+        args.unshift(configuration.gcloudBinary);
+    } else {
+        cmd = configuration.gcloudBinary;
+    }
+    runCommand(cmd, args).then(project => {
         state.gcpProject = project;
     }).catch(error => {
         console.log(error.message);
@@ -29,7 +39,15 @@ function setGcpProject() {
 }
 
 function setGceDefaultZone() {
-    runCommand(configuration.gcloudBinary, ['config', 'get-value', 'compute/zone']).then(zone => {
+    let args = ['config', 'get-value', 'compute/zone']
+    let cmd;
+    if (configuration.enableWSL) {
+        cmd = configuration.wslBinary;
+        args.unshift(configuration.gcloudBinary);
+    } else {
+        cmd = configuration.gcloudBinary;
+    }
+    runCommand(cmd, args).then(zone => {
         state.gceDefaultZone = zone;
     }).catch(error => {
         console.log(error.message);
@@ -38,8 +56,20 @@ function setGceDefaultZone() {
 }
 
 function setKubernetesContext() {
-    runCommand(configuration.kubectlBinary, ['config', 'current-context']).then(context => {
-        runCommand(configuration.kubectlBinary, ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']).then(namespace => {
+    let args = ['config', 'current-context']
+    let cmd;
+    if (configuration.enableWSL) {
+        cmd = configuration.wslBinary;
+        args.unshift(configuration.kubectlBinary);
+    } else {
+        cmd = configuration.kubectlBinary;
+    }
+    runCommand(cmd, args).then(context => {
+        let args = ['config', 'view', '--minify', '--output', 'jsonpath={..namespace}']
+        if (configuration.enableWSL) {
+            args.unshift(configuration.kubectlBinary);
+        }
+        runCommand(cmd, args).then(namespace => {
             state.kubernetesContext = context + ' (' + namespace + ')';
         }).catch(() => {
             state.kubernetesContext = context + ' (default)';
@@ -83,10 +113,16 @@ exports.reduceUI = (state, { type, config }) => {
     switch (type) {
         case 'CONFIG_LOAD':
         case 'CONFIG_RELOAD': {
+            let gcloudBinary;
+            if (!config.hyperGcpStatusLine.gcloudBinary){
+                gcloudBinary = (process.platform === 'win32' && config.hyperGcpStatusLine.enableWSL === false) ? 'gcloud.cmd' : 'gcloud';
+            } else {
+                gcloudBinary = config.hyperGcpStatusLine.gcloudBinary
+            }
             Object.assign(configuration, config.hyperGcpStatusLine);
+            configuration.gcloudBinary = gcloudBinary
         }
     }
-
     return state;
 }
 

@@ -54,3 +54,19 @@ module.exports = {
   }
 }
 ```
+
+### Enable WSL compatability
+Unless specified, `hyper-gcp-status-line` will not enable WSL compatability. The command `wsl` is used by default, it can be changed using the `wslBinary` config option.
+
+```javascript
+module.exports = {
+  config: {
+    ...
+    hyperGcpStatusLine: {
+      enableWSL: true
+      wslBinary: 'wsl.exe'
+    }
+    ...
+  }
+}
+```
